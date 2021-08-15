@@ -1,6 +1,6 @@
 import asyncio
 
-from nbterm import Notebook
+from nbtermix import Notebook
 
 
 def test_run(files):

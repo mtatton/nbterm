@@ -1,4 +1,4 @@
-name: nbterm-dev
+name: nbtermix-dev
 channels:
     - conda-forge
 dependencies:

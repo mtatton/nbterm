@@ -4,7 +4,7 @@ import pytest
 import typer
 from typer.testing import CliRunner
 
-from nbterm.nbterm import main
+from nbtermix.nbterm import main
 
 app = typer.Typer()
 app.command()(main)

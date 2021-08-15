@@ -1,4 +1,4 @@
-from nbterm import Notebook
+from nbtermix import Notebook
 
 
 def test_edit0(files):

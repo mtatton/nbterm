@@ -1,7 +1,14 @@
 [![Build Status](https://github.com/davidbrochart/nbtermix/workflows/CI/badge.svg)](https://github.com/davidbrochart/nbtermix/actions)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-# nbtermix
+ ______  _______ _______ _______ _______ ___ ___ ___  ___ ___
+|   _  \|   _   |       |   _   |   _   |   Y   |   |(   Y   )
+|.  |   |.  1   |.|   | |.  1___|.  l   |.      |.  | \  1  /
+|.  |   |.  _   `-|.  |-|.  __)_|.  _   |. \_/  |.  | /  _  \
+|:  |   |:  1    \|:  | |:  1   |:  |   |:  |   |:  |/:  |   \
+|::.|   |::.. .  /|::.| |::.. . |::.|:. |::.|:. |::.(::. |:.  )
+`--- ---`-------' `---' `-------`--- ---`--- ---`---'`--- ---'
+
 
 Lets you view, edit and execute Jupyter Notebooks in the terminal.
 
