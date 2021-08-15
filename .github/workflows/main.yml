@@ -27,24 +27,24 @@ jobs:
     - name: Setup conda
       uses: conda-incubator/setup-miniconda@v2
       with:
-        activate-environment: nbterm-dev
+        activate-environment: nbtermix-dev
         environment-file: dev-environment.yml
         python-version: ${{ matrix.python-version }}
         mamba-version: "*"
         auto-activate-base: false
         channels: conda-forge
 
-    - name: Install nbterm
+    - name: Install nbtermix
       run: |
         pip install -e .
 
     - name: Check style
       run: |
-        black --check nbterm
-        flake8 --max-line-length 100 nbterm
+        black --check nbtermix
+        flake8 --max-line-length 100 nbtermix
 
     - name: Run tests
       run: |
-        mypy nbterm
-        nbterm --help
-        py.test nbterm/tests
+        mypy nbtermix
+        nbtermix --help
+        py.test nbtermix/tests
