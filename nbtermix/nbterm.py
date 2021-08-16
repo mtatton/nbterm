@@ -95,7 +95,7 @@ def main(
     if kernel_cwd is None:
         kernel_cwd = notebook_path.parent
     if kernel is None:
-        kernel = "python"
+        kernel = "python3"
     if not kernel_cwd.is_dir():
         typer.echo(f"kernel-cwd is not a directory: {kernel_cwd}")
         sys.exit(1)

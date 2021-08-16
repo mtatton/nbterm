@@ -37,6 +37,24 @@ class Format:
             print("kernel " + kernelName + " not found.")
             print("Please use different kernel. See nbtermix --list-kernels")
             exit(0)
+        file_ext = ".py"
+        slang = spec["language"].lower()
+        if slang == "python":
+          file_ext = ".py"
+        elif slang == "python3":
+          file_ext = ".py"
+        elif slang == "sql":
+          file_ext = ".sql"
+        elif slang == "c":
+          file_ext = ".c"
+        elif slang == "cpp":
+          file_ext = ".cpp"
+        elif slang == "javascript":
+          file_ext = ".js"
+        elif slang == "php":
+          file_ext = ".php"
+        elif slang == "java":
+          file_ext = ".java"
         self.json = {
             "metadata": {
                 "kernelspec": {
@@ -44,10 +62,14 @@ class Format:
                     "language": spec["language"],
                     "name": kernelName,
                 },
-                "language_info": {"name": ""},
+                "language_info": {
+                    "file_extension": file_ext,
+                    "mimetype": "text/plain",
+                    "name": kernelName,
+                },
             },
             "nbformat": 4,
-            "nbformat_minor": 4,
+            "nbformat_minor": 5,
         }
         self.set_language()  # type: ignore
         self.cells = [Cell(self)]
