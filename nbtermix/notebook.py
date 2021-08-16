@@ -346,6 +346,12 @@ class Notebook(Help, Format, KeyBindings):
             self.cells[idx], self.cells[idx + 1] = self.cells[idx + 1], self.cells[idx]
             self.focus(idx + 1, update_layout=True)
 
+    def clear_all_output(self):
+        for i in range(0, len(self.cells)):
+            self.focus(i)
+            self.current_cell.clear_output()
+        self.focus(0)
+
     def clear_output(self):
         self.current_cell.clear_output()
 

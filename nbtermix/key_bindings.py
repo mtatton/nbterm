@@ -129,6 +129,11 @@ class KeyBindings:
             self.quitting = False
             self.move_down()
 
+        @self.key_bindings.add("c-l", filter=command_mode)
+        def c_l(event): 
+            self.quitting = False
+            self.clear_all_output()
+
         @self.key_bindings.add("l", filter=command_mode)
         def l(event):  # noqa
             self.quitting = False

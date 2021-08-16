@@ -213,7 +213,9 @@ class Cell:
         self.output_buffer.open_in_editor()
 
     def set_input_toggle_fold(self):
-        execution_count = self.json["execution_count"] or " "
+        execution_count = " "
+        if "execution_count" in self.json:
+            execution_count = self.json["execution_count"]
         if self.fold is False:
             self.fold = True
             self.input_window.height = 1

@@ -75,6 +75,7 @@ In command mode:
 - `o`: set as code cell.
 - `r`: set as Markdown cell.
 - `l`: clear cell outputs.
+- `ctrl-l`: clear all cell outputs.
 - `f`: fold current cell input.
 - `ctrl-f`: Search
 - `n`: Repeat last search.

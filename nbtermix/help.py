@@ -38,6 +38,7 @@ md = Markdown(
     "- `o`: set as code cell.\n"
     "- `r`: set as Markdown cell.\n"
     "- `l`: clear cell outputs.\n"
+    "- `ctrl-l`: clear all cell outputs.\n"
     "- `f`: fold current cell input.\n"
     "- `ctrl-f`: Search.\n"
     "- `n`: Repeat last search.\n"
