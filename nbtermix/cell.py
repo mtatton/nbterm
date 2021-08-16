@@ -321,9 +321,15 @@ class Cell:
                     msg_id = uuid.uuid4().hex
                     self.notebook.msg_id_2_execution_count[msg_id] = execution_count
                     self.notebook.executing_cells[execution_count] = self
-                    # LOG EXECUTION STATUS
+                    # log execution status
                     self.notebook.kd.log = self.notebook.debug
                     # self.notebook.kd.log = True
+                    # test for existence of kernel process sometimes the process
+                    # won't start when using the --run parameter so let's be sure
+                    # there is one
+                    if self.notebook.kd:
+                        if not hasattr(self.notebook.kd,'kernel_process'):
+                            await self.notebook.kd.start()
                     # this is added to eliminate hangs during execution
                     try:
                         await self.notebook.kd.execute(
