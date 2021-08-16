@@ -8,7 +8,7 @@ def test_run(files):
     nb_ref_path = files / "run" / "nb0.ipynb"
     nb_save_path = files / "run" / "nb0_run.ipynb"
     nb = Notebook(nb_path)
-    asyncio.run(nb.run_all())
+    asyncio.run(nb.run_all(mode="batch"))
     nb.save(nb_save_path)
     nb_ref = nb_ref_path.read_text()
     nb_run = nb_save_path.read_text()

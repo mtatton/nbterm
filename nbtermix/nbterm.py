@@ -116,7 +116,7 @@ def main(
     )
     if run:
         assert no_kernel is not True
-        asyncio.run(nb.run_all())
+        asyncio.run(nb.run_all(mode="batch"))
         if save_path is None:
             directory = notebook_path.parent
             prefix = str(directory / f"{notebook_path.stem}_run")

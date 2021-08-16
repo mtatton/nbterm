@@ -2,7 +2,7 @@ import os
 from setuptools import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
-version_ns = {}
+version_ns = {}  # type: ignore
 with open(os.path.join(here, "nbtermix", "_version.py")) as f:
     exec(f.read(), {}, version_ns)
 

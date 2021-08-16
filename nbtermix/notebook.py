@@ -139,7 +139,7 @@ class Notebook(Help, Format, KeyBindings):
     def goto_first_cell(self):
         self.focus(0)
 
-    async def run_all(self):
+    async def run_all(self, mode=None):
         if not self.kd:
             try:
                 await self.kd.start()
@@ -150,6 +150,8 @@ class Notebook(Help, Format, KeyBindings):
         for i in range(0, len(self.cells)):
             await self.run_cell(i)
         self.focus(0)
+        if mode == "batch":
+            await self.kd.stop()
 
     def show(self):
         self.key_bindings = PtKeyBindings()
