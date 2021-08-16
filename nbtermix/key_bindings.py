@@ -130,7 +130,7 @@ class KeyBindings:
             self.move_down()
 
         @self.key_bindings.add("c-l", filter=command_mode)
-        def c_l(event): 
+        def c_l(event):
             self.quitting = False
             self.clear_all_output()
 

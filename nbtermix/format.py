@@ -40,21 +40,21 @@ class Format:
         file_ext = ".py"
         slang = spec["language"].lower()
         if slang == "python":
-          file_ext = ".py"
+            file_ext = ".py"
         elif slang == "python3":
-          file_ext = ".py"
+            file_ext = ".py"
         elif slang == "sql":
-          file_ext = ".sql"
+            file_ext = ".sql"
         elif slang == "c":
-          file_ext = ".c"
+            file_ext = ".c"
         elif slang == "cpp":
-          file_ext = ".cpp"
+            file_ext = ".cpp"
         elif slang == "javascript":
-          file_ext = ".js"
+            file_ext = ".js"
         elif slang == "php":
-          file_ext = ".php"
+            file_ext = ".php"
         elif slang == "java":
-          file_ext = ".java"
+            file_ext = ".java"
         self.json = {
             "metadata": {
                 "kernelspec": {
