@@ -105,6 +105,9 @@ def main(
         sys.exit(0)
     if fold is not None:
         fold = True
+    mode = "interactive"
+    if run:
+        mode = "batch"
     nb = Notebook(
         notebook_path,
         kernel_cwd=kernel_cwd,
@@ -113,6 +116,7 @@ def main(
         save_path=save_path,
         debug=bool(debug),
         fold=bool(fold),
+        mode=mode,
     )
     if run:
         assert no_kernel is not True

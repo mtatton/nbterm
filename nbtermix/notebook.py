@@ -4,8 +4,12 @@ import itertools
 import asyncio
 from typing import List, Dict, Tuple, Any, Optional, cast
 
+# import prompt_toolkit
+
 from prompt_toolkit import ANSI
-from prompt_toolkit.key_binding import KeyBindings as PtKeyBindings
+from prompt_toolkit.buffer import Buffer
+
+# from prompt_toolkit.key_binding import KeyBindings as PtKeyBindings
 from prompt_toolkit.layout import ScrollablePane
 from prompt_toolkit.layout.containers import HSplit, VSplit
 from prompt_toolkit.layout.layout import Layout
@@ -16,9 +20,10 @@ from pygments.lexers.python import PythonLexer  # type: ignore
 from pygments.lexers.c_cpp import CppLexer  # type: ignore
 from prompt_toolkit import Application
 from rich.console import Console
-import kernel_driver  # type: ignore
+
+# import kernel_driver  # type: ignore
 from kernel_driver import KernelDriver
-from prompt_toolkit.buffer import Buffer
+import kernel_driver  # type: ignore
 
 from .cell import (
     Cell,
@@ -61,6 +66,7 @@ class Notebook(Help, Format, KeyBindings):
     marks: List[int]
     debug: bool
     fold: bool
+    vshift: int
 
     def __init__(
         self,
@@ -71,6 +77,7 @@ class Notebook(Help, Format, KeyBindings):
         save_path: Optional[Path] = None,
         debug: bool = False,
         fold: bool = False,
+        mode: str = "interactive",
     ):
         self.debug = debug
         self.fold = fold
@@ -88,7 +95,7 @@ class Notebook(Help, Format, KeyBindings):
         self.bottom_cell_idx = -1
         self.current_cell_idx = 0
         if self.nb_path.is_file():
-            self.read_nb()
+            self.read_nb(mode)
         else:
             self.create_nb(kernel_name)
         self.dirty = False
@@ -102,6 +109,7 @@ class Notebook(Help, Format, KeyBindings):
         for i in range(256):
             self.marks.append(0)
         self.editor_msg = "|x|"
+        self.vshift = 0
 
     def set_language(self):
         self.kernel_name = self.json["metadata"]["kernelspec"]["name"]
@@ -140,21 +148,26 @@ class Notebook(Help, Format, KeyBindings):
         self.focus(0)
 
     async def run_all(self, mode=None):
-        if not self.kd:
-            try:
-                await self.kd.start()
-            except Exception as e:
-                # print(str(e))
-                self.kernel_status = "error" + str(e)
-                pass
+        if self.kd:
+            if not hasattr(self.kd, "kernel_process"):
+                try:
+                    await self.kd.start()
+                    # print("Starting kd in run_all")
+                except Exception as e:
+                    # print(str(e))
+                    self.kernel_status = "error" + str(e)
+                    pass
         for i in range(0, len(self.cells)):
             await self.run_cell(i)
-        self.focus(0)
         if mode == "batch":
-            await self.kd.stop()
+            if self.kd:
+                # print("stopping kd")
+                await self.kd.stop()
+        else:
+            self.focus(0)
 
     def show(self):
-        self.key_bindings = PtKeyBindings()
+        # self.key_bindings = PtKeyBindings()
         self.bind_keys()
         self.create_layout()
         self.app = Application(
@@ -182,7 +195,8 @@ class Notebook(Help, Format, KeyBindings):
                 ]
             )
         )
-        nb_window = ScrollablePane(HSplit(inout_cells), show_scrollbar=False)
+        nb_window = ScrollablePane(HSplit(inout_cells), show_scrollbar=True, width=80)
+        nb_window.preferred_width(40)
 
         def get_top_bar_text():
             text = ""
@@ -313,6 +327,18 @@ class Notebook(Help, Format, KeyBindings):
         self.current_cell.set_input_toggle_fold()
         idx = self.current_cell_idx
         self.focus(idx, update_layout=True)
+
+    def nb_scroll_right(self):
+        self.current_cell.scroll_output_right()
+        self.update_layout()
+
+    def nb_scroll_left(self):
+        self.current_cell.scroll_output_left()
+        self.update_layout()
+
+    def nb_scroll_reset(self):
+        self.current_cell.scroll_output_reset()
+        self.update_layout()
 
     def edit_in_editor(self):
         self.edit_mode = True

@@ -11,13 +11,15 @@ class Format:
     nb_path: Path
     save_path: Optional[Path]
 
-    def read_nb(self) -> None:
+    def read_nb(self, mode="interactive") -> None:
         with open(self.nb_path) as f:
             self.json = json.load(f)
         self.set_language()  # type: ignore
-        self.cells = [
-            Cell(self, cell_json=cell_json) for cell_json in self.json["cells"]
-        ]
+        self.cells = []  # type: ignore
+        cells_cnt = len(self.json["cells"])
+        for i in range(cells_cnt):
+            self.cells.append(Cell(self, cell_json=self.json["cells"][i], mode=mode))
+            # print("Added cell")
         del self.json["cells"]
 
     def save(self, path: Optional[Path] = None) -> None:

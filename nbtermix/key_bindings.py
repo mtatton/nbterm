@@ -212,9 +212,21 @@ class KeyBindings:
         def n(event):
             self.nb_repeat_search()
 
-        @self.key_bindings.add("c-n", filter=command_mode)
+        # @self.key_bindings.add("c-n", filter=command_mode)
+        # def c_n(event):
+        #    self.nb_search_backwards()
+
+        @self.key_bindings.add("right", filter=command_mode)
+        def c_m(event):
+            self.nb_scroll_right()
+
+        @self.key_bindings.add("left", filter=command_mode)
         def c_n(event):
-            self.nb_search_backwards()
+            self.nb_scroll_left()
+
+        @self.key_bindings.add("c-b", filter=command_mode)
+        def c_semi(event):
+            self.nb_scroll_reset()
 
         @self.key_bindings.add("m", "<any>", filter=command_mode)
         def set_m(event):

@@ -66,6 +66,9 @@ In command mode:
 - `1` `g`: go to first cell.
 - `ctrl-up`: move cell above.
 - `ctrl-down`: move cell below.
+- `right` : scroll output right
+- `left` : scroll output left
+- `ctrl-b` : reset output scroll shift
 - `a`: insert cell above.
 - `b`: insert cell below.
 - `x`: cut the cell.
@@ -176,10 +179,14 @@ cd ~/pyenv
 ## CHANGELOG
 
 ```
+minor changes to v.0.0.18 by mtatton
++ scrollable output using left and right
++ added exit to run mode
+minor changes to v.0.0.17 by mtatton
+minor changes to v.0.0.16 by mtatton
 minor changes to v.0.0.15 by mtatton
 + added folding for terminal space saving
 + renamed to nbtermix
-
 minor changes to v.0.0.14 by mtatton
 minor changes to v.0.0.13 by mtatton
 minor changes to v.0.0.12 by mtatton

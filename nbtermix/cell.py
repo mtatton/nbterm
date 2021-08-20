@@ -79,7 +79,9 @@ class Cell:
     output_buffer: Buffer
     fold: bool
 
-    def __init__(self, notebook, cell_json: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self, notebook, cell_json: Optional[Dict[str, Any]] = None, mode="interactive"
+    ):
         self.notebook = notebook
         self.json = cell_json or empty_cell_json()
         self.input_prefix = Window(width=10)
@@ -108,7 +110,7 @@ class Cell:
         self.input_window = Window()
         self.input_buffer = Buffer(on_text_changed=self.input_text_changed)
         self.input_buffer.text = input_text
-        self.set_input_readonly()
+        self.set_input_readonly(mode)
         if self.json["cell_type"] == "markdown":
             self.input = HSplit(
                 [ONE_ROW, VSplit([ONE_COL, self.input_window]), ONE_ROW]
@@ -179,7 +181,9 @@ class Cell:
                 self.input = Frame(self.input_window)
                 self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
 
-    def set_input_readonly(self):
+    def set_input_readonly(self, mode="interactive"):
+        if mode == "batch":
+            return
         if self.json["cell_type"] == "markdown":
             text = self.input_buffer.text or "Type *Markdown*"
             md = Markdown(text)
@@ -205,6 +209,75 @@ class Cell:
 
     def open_in_editor(self):
         self.input_buffer.open_in_editor()
+
+    def scroll_output_right(self):
+        if self.output.height > 0:
+            vshift = self.notebook.vshift
+            vshift = vshift + 1
+            self.notebook.dirty = True
+            output_ansi, output_height = get_output_text_and_height(
+                self.json["outputs"]
+            )
+            output_text = output_ansi.value
+            tmp = output_text.split("\n")
+            scrolled = []
+            for line in tmp:
+                scrolled.append(line[vshift:])
+            out_res = "\n".join(scrolled)
+            self.output.content = FormattedTextControl(out_res)
+            self.output.height = len(scrolled)
+            # self.output.content = FormattedTextControl(text="")
+            # self.output.content=  FormattedTextControl(text="ahoj")
+            # if self.json["cell_type"] == "code":
+            #    #self.json["outputs"] = []
+            #    self.json["outputs"] = out_res
+            if self.notebook.app:
+                self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
+            self.notebook.vshift = vshift
+
+    def scroll_output_reset(self):
+        vshift = self.notebook.vshift
+        if self.output.height > 0:
+            vshift = vshift - 1
+            self.notebook.dirty = True
+            output_ansi, output_height = get_output_text_and_height(
+                self.json["outputs"]
+            )
+            output_text = output_ansi.value
+            tmp = output_text.split("\n")
+            scrolled = []
+            for line in tmp:
+                scrolled.append(line[0:])
+            out_res = "\n".join(scrolled)
+            self.output.content = FormattedTextControl(out_res)
+            if self.notebook.app:
+                self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
+            self.notebook.vshift = 0
+
+    def scroll_output_left(self):
+        vshift = self.notebook.vshift
+        if self.output.height > 0 and vshift > 0:
+            vshift = vshift - 1
+            self.notebook.dirty = True
+            output_ansi, output_height = get_output_text_and_height(
+                self.json["outputs"]
+            )
+            output_text = output_ansi.value
+            tmp = output_text.split("\n")
+            scrolled = []
+            for line in tmp:
+                scrolled.append(line[vshift:])
+            out_res = "\n".join(scrolled)
+            self.output.content = FormattedTextControl(out_res)
+            self.output.height = len(scrolled)
+            # self.output.content = FormattedTextControl(text="")
+            # self.output.content=  FormattedTextControl(text="ahoj")
+            # if self.json["cell_type"] == "code":
+            #    #self.json["outputs"] = []
+            #    self.json["outputs"] = out_res
+            if self.notebook.app:
+                self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
+            self.notebook.vshift = vshift
 
     def open_result_in_editor(self):
         output_ansi, output_height = get_output_text_and_height(self.json["outputs"])
@@ -332,6 +405,7 @@ class Cell:
                     if self.notebook.kd:
                         if not hasattr(self.notebook.kd, "kernel_process"):
                             await self.notebook.kd.start()
+                            # print("Starting kd in run")
                     # this is added to eliminate hangs during execution
                     try:
                         await self.notebook.kd.execute(
