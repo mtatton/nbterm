@@ -36,6 +36,18 @@ from .help import Help
 from .format import Format
 from .key_bindings import KeyBindings
 
+DEBUG = 0
+
+
+def log(str):
+    try:
+        if DEBUG == 1:
+            f = open("/tmp/sqlok.log", "a")
+            f.write(str + "\n")
+            f.close()
+    except Exception as e:
+        print(str(e))
+
 
 class Notebook(Help, Format, KeyBindings):
 
@@ -66,7 +78,6 @@ class Notebook(Help, Format, KeyBindings):
     marks: List[int]
     debug: bool
     fold: bool
-    vshift: int
 
     def __init__(
         self,
@@ -109,7 +120,6 @@ class Notebook(Help, Format, KeyBindings):
         for i in range(256):
             self.marks.append(0)
         self.editor_msg = "|x|"
-        self.vshift = 0
 
     def set_language(self):
         self.kernel_name = self.json["metadata"]["kernelspec"]["name"]
@@ -161,7 +171,7 @@ class Notebook(Help, Format, KeyBindings):
             await self.run_cell(i)
         if mode == "batch":
             if self.kd:
-                # print("stopping kd")
+                log("stopping kd")
                 await self.kd.stop()
         else:
             self.focus(0)
@@ -256,6 +266,19 @@ class Notebook(Help, Format, KeyBindings):
                 self.app.layout.focus(self.cells[idx].input_window)
             self.current_cell_idx = idx
 
+    def focus_current_cell(self):
+        idx = self.current_cell_idx
+        self.app = cast(Application, self.app)
+        size = self.app.renderer.output.get_size()
+        available_height = size.rows - 2  # status bars
+        # focus current cell
+        (
+            self.top_cell_idx,
+            self.bottom_cell_idx,
+        ) = self.get_visible_cell_idx_from_top(idx, available_height)
+        self.focus(idx, update_layout=True)
+        return True
+
     def update_visible_cells(self, idx: int, no_change: bool) -> bool:
         self.app = cast(Application, self.app)
         size = self.app.renderer.output.get_size()
@@ -304,19 +327,24 @@ class Notebook(Help, Format, KeyBindings):
             if available_height <= 0:
                 break
         # bottom cell may be clipped by ScrollablePane
+        # top_cell_id, bottom_cell_idx
         return idx, idx + cell_nb
 
     def get_visible_cell_idx_from_bottom(
         self, idx: int, available_height: int
     ) -> Tuple[int, int]:
         cell_nb = -1
-        for cell in self.cells[idx::-1]:
+        # for cell in self.cells[idx::-1]:
+        for cell in self.cells[idx:]:
             available_height -= cell.get_height()
             cell_nb += 1
             if available_height <= 0:
                 break
         # top cell may be clipped by ScrollablePane
-        return idx - cell_nb, idx
+        # return idx - cell_nb, idx
+        # changed in v0.1.2 orig:
+        # top_cell_id, bottom_cell_idx
+        return idx, idx + cell_nb
 
     def exit_cell(self):
         self.edit_mode = False
@@ -327,6 +355,14 @@ class Notebook(Help, Format, KeyBindings):
         self.current_cell.set_input_toggle_fold()
         idx = self.current_cell_idx
         self.focus(idx, update_layout=True)
+
+    def nb_scroll_up(self):
+        self.current_cell.scroll_output_up()
+        self.update_layout()
+
+    def nb_scroll_down(self):
+        self.current_cell.scroll_output_down()
+        self.update_layout()
 
     def nb_scroll_right(self):
         self.current_cell.scroll_output_right()
@@ -442,14 +478,27 @@ class Notebook(Help, Format, KeyBindings):
                 )
             outputs[-1]["text"].append(content["text"])
         elif msg_type in ("display_data", "execute_result"):
-            outputs.append(
-                {
-                    "data": {"text/plain": [content["data"].get("text/plain", "")]},
-                    "execution_count": execution_count,
-                    "metadata": {},
-                    "output_type": msg_type,
-                }
-            )
+            data_type = "text/plain"
+            try:
+                res_out = "NO OUTPUT"
+                if "text/plain" in content["data"]:
+                    res_out = content["data"].get("text/plain", "")
+                    data_type = "text/plain"
+                elif "text/html" in content["data"]:
+                    res_out = content["data"].get("text/html", "")
+                    data_type = "text/html"
+                outputs.append(
+                    {
+                        "data": {
+                            data_type: [res_out + "\n", ""],
+                        },
+                        "execution_count": execution_count,
+                        "metadata": {},
+                        "output_type": msg_type,
+                    }
+                )
+            except Exception as e:
+                log("-- display data output error: " + str(e))
 
             text = rich_print(f"Out[{execution_count}]:", style="red", end="")
             self.executing_cells[
@@ -484,6 +533,7 @@ class Notebook(Help, Format, KeyBindings):
 
     async def exit(self):
         # Causes whole term to hang. Better autosave than hang
+        log("-- nbtermix exit")
         if self.dirty and not self.quitting:
             self.quitting = True
             return

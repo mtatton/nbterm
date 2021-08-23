@@ -206,7 +206,7 @@ class KeyBindings:
 
         @self.key_bindings.add("c-f", filter=command_mode)
         def c_f(event):
-            self.nb_search()
+            self.focus_current_cell()
 
         @self.key_bindings.add("n", filter=command_mode)
         def n(event):
@@ -215,6 +215,14 @@ class KeyBindings:
         # @self.key_bindings.add("c-n", filter=command_mode)
         # def c_n(event):
         #    self.nb_search_backwards()
+
+        @self.key_bindings.add("c-j", filter=command_mode)
+        def c_j(event):
+            self.nb_scroll_down()
+
+        @self.key_bindings.add("c-k", filter=command_mode)
+        def c_k(event):
+            self.nb_scroll_up()
 
         @self.key_bindings.add("right", filter=command_mode)
         def c_m(event):

@@ -68,6 +68,8 @@ In command mode:
 - `ctrl-down`: move cell below.
 - `right` : scroll output right
 - `left` : scroll output left
+- `c-j` : scroll output down
+- `c-k` : scroll output up 
 - `ctrl-b` : reset output scroll shift
 - `a`: insert cell above.
 - `b`: insert cell below.
@@ -80,11 +82,12 @@ In command mode:
 - `l`: clear cell outputs.
 - `ctrl-l`: clear all cell outputs.
 - `f`: fold current cell input.
-- `ctrl-f`: Search
+- `/`: Search
 - `n`: Repeat last search.
 - `ctrl-n`: Search backwards.
 - `m`,`<any>`: Set mark <key>.
 - `'`,`<any>`: Go to mark <key>.
+- `ctrl+f`: focus current cell. 
 - `ctrl-e` or `enter`: run cell.
 - `ctrl-r` or `alt-enter`: run cell and select below.
 - `ctrl-s`: save.
@@ -179,9 +182,13 @@ cd ~/pyenv
 ## CHANGELOG
 
 ```
+minor changes to v.0.1.2  by mtatton
++ changed visible cells display a bit
++ added ctrl + f for current cell focus
++ added raw text/plain display 
++ added raw text/html display 
 minor changes to v.0.0.18 by mtatton
 + scrollable output using left and right
-+ added exit to run mode
 minor changes to v.0.0.17 by mtatton
 minor changes to v.0.0.16 by mtatton
 minor changes to v.0.0.15 by mtatton

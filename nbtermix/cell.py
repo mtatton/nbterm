@@ -15,6 +15,15 @@ ONE_COL: Window = Window(width=1)
 ONE_ROW: Window = Window(height=1)
 CONSOLE: Optional[Console] = None
 
+DEBUG = 0
+
+
+def log(str):
+    if DEBUG == 1:
+        f = open("/tmp/sqlok.log", "a")
+        f.write(str + "\n")
+        f.close()
+
 
 def set_console(console: Console):
     global CONSOLE
@@ -32,28 +41,44 @@ def rich_print(
 
 
 def get_output_text_and_height(outputs: List[Dict[str, Any]]):
-    text_list = []
-    height = 0
-    for output in outputs:
-        if output["output_type"] == "stream":
-            text = "".join(output["text"])
-            height += text.count("\n")
-            if output["name"] == "stderr":
-                # TODO: take terminal width into account
-                lines = text.splitlines()
-                lines = [line + " " * (200 - len(line)) for line in lines]
-                text = "\n".join(lines)
-                text = rich_print(text, style="white on red", end="\n")
-        elif output["output_type"] == "error":
-            text = "\n".join(output["traceback"])
-            height += text.count("\n")
-        elif output["output_type"] == "execute_result":
-            text = "\n".join(output["data"].get("text/plain", ""))
-            height += text.count("\n")
-        else:
-            continue
-        text_list.append(text)
-    text_ansi = ANSI("".join(text_list))
+    try:
+        text_list = []
+        height = 0
+        for output in outputs:
+            log("-- GET OUTPUT TEXT: " + str(output))
+            out_type = output["output_type"]
+            # log("-- CELL OUTPUT TYPE : " + str(output["output_type"]))
+            if out_type == "stream":
+                text = "".join(output["text"])
+                height += text.count("\n")
+                if output["name"] == "stderr":
+                    # TODO: take terminal width into account
+                    lines = text.splitlines()
+                    lines = [line + " " * (200 - len(line)) for line in lines]
+                    text = "\n".join(lines)
+                    text = rich_print(text, style="white on red", end="\n")
+            elif out_type == "error":
+                text = "\n".join(output["traceback"])
+                height += text.count("\n")
+            elif out_type == "display_data" or out_type == "execute_result":
+                # text = "\n".join(output["data"].get("text/plain", ""))
+                if "text/plain" in output["data"]:
+                    text = "\n".join(output["data"]["text/plain"]) + "\n"
+                elif "text/html" in output["data"]:
+                    text = "\n".join(output["data"]["text/html"]) + "\n"
+                    # from bs4 import BeautifulSoup
+                    # soup = BeautifulSoup(text)
+                    # text = soup.get_text()
+                log("-- OUTPUT EXEC RES: " + text)
+                # get("text/plain", ""))
+                # text = "\n".join(output["data"].get("text/html", ""))
+                height += text.count("\n")
+            else:
+                continue
+            text_list.append(text)
+        text_ansi = ANSI("".join(text_list))
+    except Exception as e:
+        log("-- GET OUTPUT: " + text + str(e))
     return (text_ansi, height)
 
 
@@ -78,50 +103,59 @@ class Cell:
     input_buffer: Buffer
     output_buffer: Buffer
     fold: bool
+    vshift: int
+    hshift: int
 
     def __init__(
         self, notebook, cell_json: Optional[Dict[str, Any]] = None, mode="interactive"
     ):
-        self.notebook = notebook
-        self.json = cell_json or empty_cell_json()
-        self.input_prefix = Window(width=10)
-        self.output_prefix = Window(width=10, height=0)
-        self.fold = self.notebook.fold
-        input_text = "".join(self.json["source"])
-        if self.json["cell_type"] == "code":
-            execution_count = self.json["execution_count"] or " "
-            text = rich_print(
-                f"\nIn [{execution_count}]:" + self.fold_tag(),
-                style="green",
-            )
-            self.input_prefix.content = FormattedTextControl(text=ANSI(text))
-            outputs = self.json["outputs"]
-            for output in outputs:
-                if "execution_count" in output:
-                    text = rich_print(
-                        f"Out[{output['execution_count']}]:",
-                        style="red",
-                    )
-                    self.output_prefix.content = FormattedTextControl(text=ANSI(text))
-                    break
-        else:
-            outputs = []
-        output_text, output_height = get_output_text_and_height(outputs)
-        self.input_window = Window()
-        self.input_buffer = Buffer(on_text_changed=self.input_text_changed)
-        self.input_buffer.text = input_text
-        self.set_input_readonly(mode)
-        if self.json["cell_type"] == "markdown":
-            self.input = HSplit(
-                [ONE_ROW, VSplit([ONE_COL, self.input_window]), ONE_ROW]
-            )
-        else:
-            self.input = Frame(self.input_window)
-        self.output = Window(content=FormattedTextControl(text=output_text))
-        self.output.height = output_height
-        self.output_buffer = Buffer()
-        if self.fold:
-            self.input_window.height = 1
+        try:
+            self.vshift = 0
+            self.hshift = 0
+            self.notebook = notebook
+            self.json = cell_json or empty_cell_json()
+            self.input_prefix = Window(width=10)
+            self.output_prefix = Window(width=10, height=0)
+            self.fold = self.notebook.fold
+            input_text = "".join(self.json["source"])
+            if self.json["cell_type"] == "code":
+                execution_count = self.json["execution_count"] or " "
+                text = rich_print(
+                    f"\nIn [{execution_count}]:" + self.fold_tag(),
+                    style="green",
+                )
+                self.input_prefix.content = FormattedTextControl(text=ANSI(text))
+                outputs = self.json["outputs"]
+                for output in outputs:
+                    if "execution_count" in output:
+                        text = rich_print(
+                            f"Out[{output['execution_count']}]:",
+                            style="red",
+                        )
+                        self.output_prefix.content = FormattedTextControl(
+                            text=ANSI(text)
+                        )
+                        break
+            else:
+                outputs = []
+            output_text, output_height = get_output_text_and_height(outputs)
+            self.input_window = Window()
+            self.input_buffer = Buffer(on_text_changed=self.input_text_changed)
+            self.input_buffer.text = input_text
+            self.set_input_readonly(mode)
+            if self.json["cell_type"] == "markdown":
+                self.input = HSplit(
+                    [ONE_ROW, VSplit([ONE_COL, self.input_window]), ONE_ROW]
+                )
+            else:
+                self.input = Frame(self.input_window)
+            self.output = Window(content=FormattedTextControl(text=output_text))
+            self.output.height = output_height
+            self.output_buffer = Buffer()
+            if self.fold:
+                self.input_window.height = 1
+        except Exception as e:
+            print(str(e))
 
     def fold_tag(self):
         if self.fold is False:
@@ -210,74 +244,50 @@ class Cell:
     def open_in_editor(self):
         self.input_buffer.open_in_editor()
 
+    def scroll_output(self):
+        if self.output.height > 0:
+            hshift = self.hshift
+            vshift = self.vshift
+            self.notebook.dirty = True
+            output_ansi, output_height = get_output_text_and_height(
+                self.json["outputs"]
+            )
+            output_text = output_ansi.value
+            tmp = output_text.split("\n")
+            scrolled = []
+            for line in tmp[vshift:]:
+                scrolled.append(line[hshift:])
+                out_res = "\n".join(scrolled)
+            self.output.content = FormattedTextControl(out_res)
+            self.output.height = len(scrolled)
+            if self.notebook.app:
+                self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
+
+    def scroll_output_up(self):
+        if self.output.height > 0 and self.vshift:
+            self.vshift -= 1
+            self.scroll_output()
+
+    def scroll_output_down(self):
+        if self.output.height > 1:
+            self.vshift += 1
+            self.scroll_output()
+
     def scroll_output_right(self):
         if self.output.height > 0:
-            vshift = self.notebook.vshift
-            vshift = vshift + 1
-            self.notebook.dirty = True
-            output_ansi, output_height = get_output_text_and_height(
-                self.json["outputs"]
-            )
-            output_text = output_ansi.value
-            tmp = output_text.split("\n")
-            scrolled = []
-            for line in tmp:
-                scrolled.append(line[vshift:])
-            out_res = "\n".join(scrolled)
-            self.output.content = FormattedTextControl(out_res)
-            self.output.height = len(scrolled)
-            # self.output.content = FormattedTextControl(text="")
-            # self.output.content=  FormattedTextControl(text="ahoj")
-            # if self.json["cell_type"] == "code":
-            #    #self.json["outputs"] = []
-            #    self.json["outputs"] = out_res
-            if self.notebook.app:
-                self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
-            self.notebook.vshift = vshift
-
-    def scroll_output_reset(self):
-        vshift = self.notebook.vshift
-        if self.output.height > 0:
-            vshift = vshift - 1
-            self.notebook.dirty = True
-            output_ansi, output_height = get_output_text_and_height(
-                self.json["outputs"]
-            )
-            output_text = output_ansi.value
-            tmp = output_text.split("\n")
-            scrolled = []
-            for line in tmp:
-                scrolled.append(line[0:])
-            out_res = "\n".join(scrolled)
-            self.output.content = FormattedTextControl(out_res)
-            if self.notebook.app:
-                self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
-            self.notebook.vshift = 0
+            self.hshift += 1
+            self.scroll_output()
 
     def scroll_output_left(self):
-        vshift = self.notebook.vshift
-        if self.output.height > 0 and vshift > 0:
-            vshift = vshift - 1
-            self.notebook.dirty = True
-            output_ansi, output_height = get_output_text_and_height(
-                self.json["outputs"]
-            )
-            output_text = output_ansi.value
-            tmp = output_text.split("\n")
-            scrolled = []
-            for line in tmp:
-                scrolled.append(line[vshift:])
-            out_res = "\n".join(scrolled)
-            self.output.content = FormattedTextControl(out_res)
-            self.output.height = len(scrolled)
-            # self.output.content = FormattedTextControl(text="")
-            # self.output.content=  FormattedTextControl(text="ahoj")
-            # if self.json["cell_type"] == "code":
-            #    #self.json["outputs"] = []
-            #    self.json["outputs"] = out_res
-            if self.notebook.app:
-                self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
-            self.notebook.vshift = vshift
+        if self.output.height > 0 and self.hshift > 0:
+            self.hshift -= 1
+            self.scroll_output()
+
+    def scroll_output_reset(self):
+        if self.output.height > 0:
+            self.vshift = 0
+            self.hshift = 0
+            self.scroll_output()
 
     def open_result_in_editor(self):
         output_ansi, output_height = get_output_text_and_height(self.json["outputs"])
@@ -379,52 +389,58 @@ class Cell:
                     os.remove(fname)
 
     async def run(self):
-        self.clear_output()
-        if self.json["cell_type"] == "code":
-            code = self.input_buffer.text.strip()
-            if code:
-                if self not in self.notebook.executing_cells.values():
-                    self.notebook.dirty = True
-                    executing_text = rich_print(
-                        "\nIn [*]:" + self.fold_tag(), style="green"
-                    )
-                    self.input_prefix.content = FormattedTextControl(
-                        text=ANSI(executing_text)
-                    )
-                    self.notebook.execution_count += 1
-                    execution_count = self.notebook.execution_count
-                    msg_id = uuid.uuid4().hex
-                    self.notebook.msg_id_2_execution_count[msg_id] = execution_count
-                    self.notebook.executing_cells[execution_count] = self
-                    # log execution status
-                    self.notebook.kd.log = self.notebook.debug
-                    # self.notebook.kd.log = True
-                    # test for existence of kernel process sometimes the process
-                    # won't start when using the --run parameter so let's be sure
-                    # there is one
-                    if self.notebook.kd:
-                        if not hasattr(self.notebook.kd, "kernel_process"):
-                            await self.notebook.kd.start()
-                            # print("Starting kd in run")
-                    # this is added to eliminate hangs during execution
-                    try:
-                        await self.notebook.kd.execute(
-                            self.input_buffer.text, msg_id=msg_id
+        try:
+            self.clear_output()
+            if self.json["cell_type"] == "code":
+                code = self.input_buffer.text.strip()
+                # log("-- EXEUCING CODE " + str(code))
+                if code:
+                    if self not in self.notebook.executing_cells.values():
+                        self.notebook.dirty = True
+                        executing_text = rich_print(
+                            "\nIn [*]:" + self.fold_tag(), style="green"
                         )
-                    except Exception as e:
-                        # print("EXCEPTION DURING EXECUTION")
-                        self.notebook.kernel_status = "Exception " + str(e)
-                        return
-                    del self.notebook.executing_cells[execution_count]
-                    text = rich_print(
-                        f"\nIn [{execution_count}]:" + self.fold_tag(),
-                        style="green",
-                    )
-                    self.input_prefix.content = FormattedTextControl(text=ANSI(text))
-                    self.json["execution_count"] = execution_count
-                    if self.notebook.app:
-                        self.notebook.app.invalidate()
+                        self.input_prefix.content = FormattedTextControl(
+                            text=ANSI(executing_text)
+                        )
+                        self.notebook.execution_count += 1
+                        execution_count = self.notebook.execution_count
+                        msg_id = uuid.uuid4().hex
+                        self.notebook.msg_id_2_execution_count[msg_id] = execution_count
+                        self.notebook.executing_cells[execution_count] = self
+                        # log execution status
+                        self.notebook.kd.log = self.notebook.debug
+                        # self.notebook.kd.log = True
+                        # test for existence of kernel process sometimes the process
+                        # won't start when using the --run parameter so let's be sure
+                        # there is one
+                        if self.notebook.kd:
+                            if not hasattr(self.notebook.kd, "kernel_process"):
+                                await self.notebook.kd.start()
+                                # print("Starting kd in run")
+                        # this is added to eliminate hangs during execution
+                        try:
+                            await self.notebook.kd.execute(
+                                self.input_buffer.text, msg_id=msg_id
+                            )
+                        except Exception as e:
+                            # print("EXCEPTION DURING EXECUTION")
+                            self.notebook.kernel_status = "Exception " + str(e)
+                            return
+                        del self.notebook.executing_cells[execution_count]
+                        text = rich_print(
+                            f"\nIn [{execution_count}]:" + self.fold_tag(),
+                            style="green",
+                        )
+                        self.input_prefix.content = FormattedTextControl(
+                            text=ANSI(text)
+                        )
+                        self.json["execution_count"] = execution_count
+                        if self.notebook.app:
+                            self.notebook.app.invalidate()
+                else:
+                    self.clear_output()
             else:
                 self.clear_output()
-        else:
-            self.clear_output()
+        except Exception as e:
+            print("RUN PROBLEM " + str(e))
