@@ -1,13 +1,12 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ```
- ______  _______ _______ _______ _______ ___ ___ ___  ___ ___
-|   _  \|   _   |       |   _   |   _   |   Y   |   |(   Y   )
-|.  |   |.  1   |.|   | |.  1___|.  l   |.      |.  | \  1  /
-|.  |   |.  _   `-|.  |-|.  __)_|.  _   |. \_/  |.  | /  _  \
-|:  |   |:  1    \|:  | |:  1   |:  |   |:  |   |:  |/:  |   \
-|::.|   |::.. .  /|::.| |::.. . |::.|:. |::.|:. |::.(::. |:.  )
-`--- ---`-------' `---' `-------`--- ---`--- ---`---'`--- ---'
+ _______ ___. ___________                  .__
+ \      \\_ |_\__    ___/__________  _____ |__|__  ___
+ /   |   \| __ \|    |_/ __ \_  __ \/     \|  \  \/  /
+/    |    \ \_\ \    |\  ___/|  | \/  Y Y  \  |>    <
+\____|__  /___  /____| \___  >__|  |__|_|  /__/__/\_ \
+        \/    \/           \/            \/         \/
 ```
 
 
@@ -62,6 +61,7 @@ In command mode:
 
 - `up` or k: select cell above.
 - `down` or j: select cell below.
+- `ctrl-f`: scroll current cell to the top.
 - `ctrl-g`: go to last cell.
 - `1` `g`: go to first cell.
 - `ctrl-up`: move cell above.
@@ -84,7 +84,7 @@ In command mode:
 - `f`: fold current cell input.
 - `/`: Search
 - `n`: Repeat last search.
-- `ctrl-n`: Search backwards.
+- `N`: Search backwards.
 - `m`,`<any>`: Set mark <key>.
 - `'`,`<any>`: Go to mark <key>.
 - `ctrl+f`: focus current cell. 
@@ -182,6 +182,8 @@ cd ~/pyenv
 ## CHANGELOG
 
 ```
+minor changes to v.0.1.3  by mtatton
++ fixed search function (keys /,n,N)
 minor changes to v.0.1.2  by mtatton
 + changed visible cells display a bit
 + added ctrl + f for current cell focus

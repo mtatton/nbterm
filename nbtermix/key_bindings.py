@@ -34,8 +34,8 @@ class KeyBindings:
             # self.cell_edit_mode = True
             self.edit_result_in_editor()
 
-        @self.key_bindings.add("c-w", filter=edit_mode)
-        def ce_mode_w(event):
+        @self.key_bindings.add("c-o", filter=edit_mode)
+        def ce_mode_o(event):
             self.edit_in_editor()
             self.save()
 
@@ -208,13 +208,17 @@ class KeyBindings:
         def c_f(event):
             self.focus_current_cell()
 
+        @self.key_bindings.add("/", filter=command_mode)
+        def search(event):
+            self.nb_search()
+
         @self.key_bindings.add("n", filter=command_mode)
         def n(event):
             self.nb_repeat_search()
 
-        # @self.key_bindings.add("c-n", filter=command_mode)
-        # def c_n(event):
-        #    self.nb_search_backwards()
+        @self.key_bindings.add("N", filter=command_mode)
+        def c_n(event):
+           self.nb_search_backwards()
 
         @self.key_bindings.add("c-j", filter=command_mode)
         def c_j(event):

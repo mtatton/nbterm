@@ -557,7 +557,7 @@ class Notebook(Help, Format, KeyBindings):
         for i in range(idx, len(self.cells)):
             txt = self.cells[i].input_buffer.text
             if search_str in txt:
-                # print("FOUND: "+str(txt))
+                print("FOUND: "+str(txt))
                 self.focus(i)
                 break
 

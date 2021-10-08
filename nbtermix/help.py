@@ -8,6 +8,9 @@ from .cell import rich_print
 
 md = Markdown(
     "## nbtermix help\n"
+    "\n"
+    "Welcome to the jupyter notebook for console\n"
+    "\n"
     "There are two modes: edit mode, and command mode.\n"
     "\n"
     "- `e`: enter the edit mode, allowing to type into the cell.\n"
@@ -25,6 +28,7 @@ md = Markdown(
     "\n"
     "- `up` or `k`: select cell above.\n"
     "- `down` or `j`: select cell below.\n"
+    "- `ctrl-f`: current cell to the top.\n"
     "- `ctrl-g`: go to last cell.\n"
     "- `1` `g`: go to first cell.\n"
     "- `ctrl-up`: move cell above.\n"
@@ -47,7 +51,7 @@ md = Markdown(
     "- `f`: fold current cell input.\n"
     "- `/`: Search.\n"
     "- `n`: Repeat last search.\n"
-    "- `ctrl-n`: Search backwards.\n"
+    "- `N`: Search backwards.\n"
     "- `m`,`<any>`: Set mark <key>.\n"
     "- `'`,`<any>`: Go to mark <key>.\n"
     "- `ctrl-e` or `enter`: run cell.\n"
