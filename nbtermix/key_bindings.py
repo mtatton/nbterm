@@ -35,6 +35,7 @@ class KeyBindings:
             self.edit_result_in_editor()
 
         @self.key_bindings.add("c-o", filter=edit_mode)
+        @self.key_bindings.add("c-w", filter=edit_mode)
         def ce_mode_o(event):
             self.edit_in_editor()
             self.save()
