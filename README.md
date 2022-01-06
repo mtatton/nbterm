@@ -146,17 +146,17 @@ out of the box
 
 ## Testing environment
 
-using Python 3.9 and iPyKernel==6.0.0
+on Debian X using Python 3.7 
+(with kernel.json patch see Troubleshooting)
 
 ```
-pip install ipykernel==6.0.0
-
 $ jupyter --version:
 
-jupyter core     : 4.7.1
-ipython          : 7.25.0
-ipykernel        : 6.0.0
-jupyter client   : 6.1.12
+IPython          : 7.31.0
+ipykernel        : 6.6.1
+jupyter_client   : 7.1.0
+jupyter_core     : 4.9.1
+traitlets        : 5.1.1
 
 ```
 
