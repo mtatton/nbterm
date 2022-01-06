@@ -212,6 +212,7 @@ nbtermix tries to run Python 2.7. And that's something
 that doesn't work. 
 
 Ensuse in Your kernel.json for python3 the argv is python3:
+```
 cat /usr/local/share/jupyter/kernels/python3/kernel.json
 {
 "argv": [
