@@ -9,24 +9,17 @@
         \/    \/           \/            \/         \/
 ```
 
-
-Lets you view, edit and execute Jupyter Notebooks in the terminal.
+Let you view, edit and execute Jupyter Notebooks in the terminal.
 
 ## Install
 
 Using pip:
 
 ```
-pip install nbtermix
+pip3 install ipython jupyter_client ipykernel
+pip3 install nbtermix
 ```
-
-Using conda:
-
-```
-mamba install nbtermix -c conda-forge
-```
-
-You will also need a kernel, e.g. `ipykernel` or `xeus-python` for Python, `xeus-cling` for C++.
+You will also need a kernel, e.g. `ipykernel`. 
 
 ## Usage
 
@@ -200,3 +193,29 @@ minor changes to v.0.0.14 by mtatton
 minor changes to v.0.0.13 by mtatton
 minor changes to v.0.0.12 by mtatton
 ```
+## TROUBLESHOOTING
+
+Problem: Python (busy) and nothing happens
+
+Solution: Verify if python3 kernel is called
+
+list python3 kernel location
+
+$ jupyter kernelspec list
+
+Find kernel.json in the destination (e.g.):
+
+python3|/usr/local/share/jupyter/kernels/python3
+
+In case Your system has both Python 2.7 and 3.x the 
+nbtermix tries to run Python 2.7. And that's something 
+that doesn't work. 
+
+Ensuse in Your kernel.json for python3 the argv is python3:
+cat /usr/local/share/jupyter/kernels/python3/kernel.json
+{
+"argv": [
+*"python3"*,
+"-m",
+"ipykernel_launcher",
+... etc.
