@@ -1,12 +1,18 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ```
+--==================================================--
+
  _______ ___. ___________                  .__
  \      \\_ |_\__    ___/__________  _____ |__|__  ___
  /   |   \| __ \|    |_/ __ \_  __ \/     \|  \  \/  /
 /    |    \ \_\ \    |\  ___/|  | \/  Y Y  \  |>    <
 \____|__  /___  /____| \___  >__|  |__|_|  /__/__/\_ \
         \/    \/           \/            \/         \/
+
+      -| Jupyter Kernels in Your Terminal |-
+
+--==================================================--
 ```
 
 Let you view, edit and execute Jupyter Notebooks in the terminal.
@@ -16,8 +22,7 @@ Let you view, edit and execute Jupyter Notebooks in the terminal.
 Using pip:
 
 ```
-pip3 install ipython jupyter_client ipykernel
-pip3 install nbtermix
+pip3 install jupyter_client ipykernel nbtermix
 ```
 You will also need a kernel, e.g. `ipykernel`. 
 
@@ -26,13 +31,13 @@ You will also need a kernel, e.g. `ipykernel`.
 Open an interactive notebook:
 
 ```
-$ nbtermix my_notebook.ipynb
+$ nbtermix foo.ipynb
 ```
 
 Run a notebook in batch mode:
 
 ```
-$ nbtermix --run my_notebook.ipynb
+$ nbtermix --run foo.ipynb
 ```
 
 ## Key bindings
