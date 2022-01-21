@@ -225,3 +225,13 @@ cat /usr/local/share/jupyter/kernels/python3/kernel.json
 "-m",
 "ipykernel_launcher",
 ... etc.
+
+Problem: On Debian 11 there is no /usr/bin/python binary
+
+In case You are sure there is no Python 2.x installed
+on Your machine. You can prepare the binary by updating
+the default /usr/bin/python alternative. You can do this
+as follows:
+
+# update-alternatives --install /usr/bin/python python /usr/bin/python3.9 2
+
