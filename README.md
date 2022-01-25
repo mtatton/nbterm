@@ -59,7 +59,7 @@ For more information type ctrl+h
 
 Hints:
 
-* Using j,k will help You to focues to next, previous cells
+* Using j,k will help You to focus to next, previous cells
 * ctrl+f will bring current cell to the top of the screen
 * ctrl+s will save current workbook
 * nbtermix --fold foo.ipynb - will open the notebook and fold cells
