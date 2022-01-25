@@ -11,18 +11,11 @@ from rich.markdown import Markdown
 from rich.console import Console
 import copy
 
+from nbtermix.log import log
+
 ONE_COL: Window = Window(width=1)
 ONE_ROW: Window = Window(height=1)
 CONSOLE: Optional[Console] = None
-
-DEBUG = 0
-
-
-def log(str):
-    if DEBUG == 1:
-        f = open("/tmp/sqlok.log", "a")
-        f.write(str + "\n")
-        f.close()
 
 
 def set_console(console: Console):
@@ -174,6 +167,7 @@ class Cell:
         return cell
 
     def input_text_changed(self, _=None):
+        log("-- INPUT TEXT CHANGED --")
         self.notebook.dirty = True
         self.notebook.quitting = False
         line_nb = self.input_buffer.text.count("\n") + 1
@@ -182,6 +176,7 @@ class Cell:
         if height_keep is not None and line_nb != height_keep:
             # height has changed
             self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
+        log("-- TEXT: " + self.input_buffer.text)
 
     def set_as_markdown(self):
         prev_cell_type = self.json["cell_type"]
@@ -243,6 +238,8 @@ class Cell:
 
     def open_in_editor(self):
         self.input_buffer.open_in_editor()
+        self.notebook.dirty = True
+        log("-- EDIT IN EDITOR END --")
 
     def scroll_output(self):
         if self.output.height > 0:

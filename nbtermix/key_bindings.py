@@ -34,10 +34,23 @@ class KeyBindings:
             # self.cell_edit_mode = True
             self.edit_result_in_editor()
 
-        @self.key_bindings.add("c-o", filter=edit_mode)
-        @self.key_bindings.add("c-w", filter=edit_mode)
-        def ce_mode_o(event):
+        @self.key_bindings.add("c-o", filter=command_mode)
+        async def ce_mode_ed(event):
+            self.enter_cell()
             self.edit_in_editor()
+            # This is ugly but it works
+            self.exit_cell()
+            self.enter_cell()
+            self.save()
+
+        @self.key_bindings.add("c-w", filter=edit_mode)
+        @self.key_bindings.add("c-o", filter=edit_mode)
+        def ce_mode_w(event):
+            self.quitting = False
+            self.enter_cell()
+            self.edit_in_editor()
+            self.exit_cell()
+            self.enter_cell()
             self.save()
 
         @self.key_bindings.add("c-f", filter=edit_mode)
@@ -47,8 +60,8 @@ class KeyBindings:
 
         @self.key_bindings.add("c-e", filter=edit_mode)
         async def e_mod_c_e(event):
-            self.edit_mode = False
-            self.exit_cell()
+            self.quitting = False
+            await self.queue_run_cell()
 
         @self.key_bindings.add("c-s", filter=edit_mode)
         def e_mod_c_s(event):
@@ -201,7 +214,7 @@ class KeyBindings:
         def G(event):
             self.goto_last_cell()
 
-        @self.key_bindings.add("1", "g", filter=command_mode)
+        @self.key_bindings.add("g", "g", filter=command_mode)
         def k_1_g(event):
             self.goto_first_cell()
 
@@ -219,7 +232,7 @@ class KeyBindings:
 
         @self.key_bindings.add("N", filter=command_mode)
         def c_n(event):
-           self.nb_search_backwards()
+            self.nb_search_backwards()
 
         @self.key_bindings.add("c-j", filter=command_mode)
         def c_j(event):
@@ -234,7 +247,7 @@ class KeyBindings:
             self.nb_scroll_right()
 
         @self.key_bindings.add("left", filter=command_mode)
-        def c_n(event):
+        def c_left(event):
             self.nb_scroll_left()
 
         @self.key_bindings.add("c-b", filter=command_mode)

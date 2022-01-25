@@ -7,60 +7,66 @@ from prompt_toolkit import ANSI
 from .cell import rich_print
 
 md = Markdown(
-    "## nbtermix help\n"
-    "\n"
-    "Welcome to the jupyter notebook for console\n"
-    "\n"
-    "There are two modes: edit mode, and command mode.\n"
-    "\n"
-    "- `e`: enter the edit mode, allowing to type into the cell.\n"
-    "- `esc`: exit the edit mode and enter the command mode.\n"
-    "\n"
-    "In edit mode:\n"
-    "- `ctrl-e`: run cell.\n"
-    "- `ctrl-r`: run cell and select below in edit mode.\n"
-    "- `ctrl-t`: open cell result in external editor.\n"
-    "- `ctrl-w`: open cell in external editor.\n"
-    "- `ctrl-f`: save tmp file from cell and execute it.\n"
-    "- `ctrl-s`: save.\n"
-    "\n"
-    "In command mode:\n"
-    "\n"
-    "- `up` or `k`: select cell above.\n"
-    "- `down` or `j`: select cell below.\n"
-    "- `ctrl-f`: current cell to the top.\n"
-    "- `ctrl-g`: go to last cell.\n"
-    "- `1` `g`: go to first cell.\n"
-    "- `ctrl-up`: move cell above.\n"
-    "- `ctrl-down`: move cell below.\n"
-    "- `right` : scroll output right\n"
-    "- `left` : scroll output left\n"
-    "- `c-j` : scroll output down\n"
-    "- `c-k` : scroll output up\n"
-    "- `ctrl-b` : reset output scroll shift\n"
-    "- `a`: insert cell above.\n"
-    "- `b`: insert cell below.\n"
-    "- `x`: cut the cell.\n"
-    "- `c`: copy the cell.\n"
-    "- `ctrl-v`: paste cell above.\n"
-    "- `v`: paste cell below.\n"
-    "- `o`: set as code cell.\n"
-    "- `r`: set as Markdown cell.\n"
-    "- `l`: clear cell outputs.\n"
-    "- `ctrl-l`: clear all cell outputs.\n"
-    "- `f`: fold current cell input.\n"
-    "- `/`: Search.\n"
-    "- `n`: Repeat last search.\n"
-    "- `N`: Search backwards.\n"
-    "- `m`,`<any>`: Set mark <key>.\n"
-    "- `'`,`<any>`: Go to mark <key>.\n"
-    "- `ctrl-e` or `enter`: run cell.\n"
-    "- `ctrl-f` : focus current cell.\n"
-    "- `ctrl-r` or `alt-enter`: run cell and select below.\n"
-    "- `ctrl-s`: save.\n"
-    "- `ctrl-p`: run all cells.\n"
-    "- `ctrl-q`: exit.\n"
-    "- `ctrl-h`: show help.\n"
+    r"""```
+--==================================================--
+ _______ ___. ___________                  .__
+ \      \\_ |_\__    ___/__________  _____ |__|__  ___.
+ /   |   \| __ \|    |_/ __ \_  __ \/     \|  \  \/  /.
+/    |    \ \_\ \    |\  ___/|  | \/  Y Y  \  |>    <..
+\____|__  /___  /____| \___  >__|  |__|_|  /__/__/\_ \.
+........\/....\/...........\/............\/.........\/.
+--==================================================--
+```
+    There are two modes: edit mode, and command mode.
+    - `e`: enter the edit mode, allowing to type into the cell.
+    - `esc`: exit the edit mode and enter the command mode.
+
+    In edit mode:
+    - `ctrl-e`: run cell.
+    - `ctrl-r`: run cell and select below in edit mode.
+    - `ctrl-o`: open cell in external editor.
+    - `ctrl-t`: open cell result in external editor.
+    - `ctrl-f`: save tmp file from cell and execute it.
+    - `ctrl-s`: save.
+
+    In command mode:
+
+    - `up` or `k`: select cell above.
+    - `down` or `j`: select cell below.
+    - `ctrl-f`: current cell to the top.
+    - `ctrl-g`: go to last cell.
+    - `gg`: go to first cell.
+    - `ctrl-up`: move cell above.
+    - `ctrl-down`: move cell below.
+    - `right` : scroll output right
+    - `left` : scroll output left
+    - `c-j` : scroll output down
+    - `c-k` : scroll output up
+    - `ctrl-b` : reset output scroll shift
+    - `a`: insert cell above.
+    - `b`: insert cell below.
+    - `x`: cut the cell.
+    - `c`: copy the cell.
+    - `ctrl-v`: paste cell above.
+    - `v`: paste cell below.
+    - `o`: set as code cell.
+    - `r`: set as Markdown cell.
+    - `l`: clear cell outputs.
+    - `ctrl-l`: clear all cell outputs.
+    - `f`: fold current cell input.
+    - `/`: Search.
+    - `n`: Repeat last search.
+    - `N`: Search backwards.
+    - `m`,`<any>`: Set mark <key>.
+    - `'`,`<any>`: Go to mark <key>.
+    - `ctrl-e` or `enter`: run cell.
+    - `ctrl-f` : focus current cell.
+    - `ctrl-r` or `alt-enter`: run cell and select below.
+    - `ctrl-s`: save.
+    - `ctrl-p`: run all cells.
+    - `ctrl-q`: exit.
+    - `ctrl-h`: show help.
+"""
 )
 
 

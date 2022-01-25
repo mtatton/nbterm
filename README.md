@@ -14,6 +14,7 @@
 
 --==================================================--
 ```
+![NBTERMIX SCREEN](https://raw.githubusercontent.com/mtatton/nbtermix/master/nbtermix.png)
 
 Let you view, edit and execute Jupyter Notebooks in the terminal.
 
@@ -180,6 +181,12 @@ cd ~/pyenv
 ## CHANGELOG
 
 ```
+minor changes in v.0.1.4 by mtatton
+* added ! keyboard shortcut to go to
+  external editor from command mode
+* when there was a cell edit in
+  external editor the cell didn't
+  refresh
 minor changes to v.0.1.3  by mtatton
 + fixed search function (keys /,n,N)
 minor changes to v.0.1.2  by mtatton

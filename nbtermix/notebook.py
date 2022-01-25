@@ -24,6 +24,7 @@ from rich.console import Console
 # import kernel_driver  # type: ignore
 from kernel_driver import KernelDriver
 import kernel_driver  # type: ignore
+from nbtermix.log import log
 
 from .cell import (
     Cell,
@@ -35,18 +36,6 @@ from .cell import (
 from .help import Help
 from .format import Format
 from .key_bindings import KeyBindings
-
-DEBUG = 0
-
-
-def log(str):
-    try:
-        if DEBUG == 1:
-            f = open("/tmp/sqlok.log", "a")
-            f.write(str + "\n")
-            f.close()
-    except Exception as e:
-        print(str(e))
 
 
 class Notebook(Help, Format, KeyBindings):
@@ -106,7 +95,7 @@ class Notebook(Help, Format, KeyBindings):
         self.bottom_cell_idx = -1
         self.current_cell_idx = 0
         if self.nb_path.is_file():
-            self.read_nb(mode)
+            self.read_nb()
         else:
             self.create_nb(kernel_name)
         self.dirty = False
@@ -163,6 +152,7 @@ class Notebook(Help, Format, KeyBindings):
                 try:
                     await self.kd.start()
                     # print("Starting kd in run_all")
+                    log("-- NBTERMIX KENREL START - RUN ALL --")
                 except Exception as e:
                     # print(str(e))
                     self.kernel_status = "error" + str(e)
@@ -173,6 +163,7 @@ class Notebook(Help, Format, KeyBindings):
             if self.kd:
                 log("stopping kd")
                 await self.kd.stop()
+                log("-- NBTERMIX KERNEL STOP - RUN ALL --")
         else:
             self.focus(0)
 
@@ -205,7 +196,7 @@ class Notebook(Help, Format, KeyBindings):
                 ]
             )
         )
-        nb_window = ScrollablePane(HSplit(inout_cells), show_scrollbar=True, width=80)
+        nb_window = ScrollablePane(HSplit(inout_cells), show_scrollbar=False)
         nb_window.preferred_width(40)
 
         def get_top_bar_text():
@@ -237,11 +228,9 @@ class Notebook(Help, Format, KeyBindings):
             text += " " + self.editor_msg
             return text
 
-        self.top_bar = FormattedTextToolbar(
-            get_top_bar_text, style="#ffffff bg:#444444"
-        )
+        self.top_bar = FormattedTextToolbar(get_top_bar_text, style="Green bg:Black")
         self.bottom_bar = FormattedTextToolbar(
-            get_bottom_bar_text, style="#ffffff bg:#444444"
+            get_bottom_bar_text, style="Green bg:Black"
         )
         root_container = HSplit([self.top_bar, nb_window, self.bottom_bar])
         self.layout = Layout(root_container)
@@ -466,6 +455,7 @@ class Notebook(Help, Format, KeyBindings):
         self.focus(idx, update_layout=True)
 
     def output_hook(self, msg: Dict[str, Any]):
+        # log("-- INVOKING OUTPUT HOOK --")
         msg_id = msg["parent_header"]["msg_id"]
         execution_count = self.msg_id_2_execution_count[msg_id]
         msg_type = msg["header"]["msg_type"]
@@ -529,17 +519,18 @@ class Notebook(Help, Format, KeyBindings):
     async def _show(self):
         if self.kd:
             asyncio.create_task(self.kd.start())
+            log("-- NBTERMIX KERNEL START - INTERACTIVE --")
         await self.app.run_async()
 
     async def exit(self):
         # Causes whole term to hang. Better autosave than hang
-        log("-- nbtermix exit")
         if self.dirty and not self.quitting:
             self.quitting = True
             return
         try:
             if self.kd:
                 await self.kd.stop()
+                log("-- NBTERMIX KERNEL STOP - EXIT --")
         except Exception as e:
             print("Kernel stop error." + str(e))
         self.app.exit()
@@ -557,7 +548,7 @@ class Notebook(Help, Format, KeyBindings):
         for i in range(idx, len(self.cells)):
             txt = self.cells[i].input_buffer.text
             if search_str in txt:
-                print("FOUND: "+str(txt))
+                # print("FOUND: "+str(txt))
                 self.focus(i)
                 break
 
