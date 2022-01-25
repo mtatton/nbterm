@@ -42,11 +42,17 @@ $ nbtermix --run foo.ipynb
 ## Quickstart
 
 1] execute: nbtermix foo.ipynb
+
 2] There should be notebook ready for You to use
+
 3] ctrl+o to open current cell in external editor
+
 4] type Your python expression, function etc. (like 1+1)
+
 5] press enter to execute current cell
+
 6] type key b to insert cell below
+
 7] repeat from step 3 co continue
 
 For more information type ctrl+h
