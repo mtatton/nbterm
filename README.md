@@ -207,7 +207,7 @@ minor changes to v.0.0.12 by mtatton
 ```
 ## TROUBLESHOOTING
 
-Problem: Python (busy) and nothing happens
+# Problem: Python (busy) and nothing happens
 
 Solution: Verify if python3 kernel is called
 
@@ -223,7 +223,7 @@ In case Your system has both Python 2.7 and 3.x the
 nbtermix tries to run Python 2.7. And that's something 
 that doesn't work. 
 
-Ensuse in Your kernel.json for python3 the argv is python3:
+Ensure in Your kernel.json for python3 the argv is python3:
 ```
 cat /usr/local/share/jupyter/kernels/python3/kernel.json
 {
@@ -233,7 +233,7 @@ cat /usr/local/share/jupyter/kernels/python3/kernel.json
 "ipykernel_launcher",
 ... etc.
 
-Problem: On Debian 11 there is no /usr/bin/python binary
+# Problem: On Debian 11 there is no /usr/bin/python binary
 
 In case You are sure there is no Python 2.x installed
 on Your machine. You can prepare the binary by updating
