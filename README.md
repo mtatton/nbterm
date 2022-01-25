@@ -232,6 +232,7 @@ cat /usr/local/share/jupyter/kernels/python3/kernel.json
 "-m",
 "ipykernel_launcher",
 ... etc.
+```
 
 ### Problem: On Debian 11 there is no /usr/bin/python binary
 
