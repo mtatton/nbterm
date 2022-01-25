@@ -25,8 +25,6 @@ Using pip:
 ```
 pip3 install jupyter_client ipykernel nbtermix
 ```
-You will also need a kernel, e.g. `ipykernel`. 
-
 ## Usage
 
 Open an interactive notebook:
