@@ -16,7 +16,7 @@
 ```
 ![NBTERMIX SCREEN](https://raw.githubusercontent.com/mtatton/nbtermix/master/nbtermix.png)
 
-Lets you view, edit and execute Jupyter Notebooks on Your terminal.
+Lets you view, edit and execute Jupyter Notebooks in Your terminal.
 
 ## Install
 
