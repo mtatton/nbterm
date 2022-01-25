@@ -10,13 +10,13 @@
 \____|__  /___  /____| \___  >__|  |__|_|  /__/__/\_ \
         \/    \/           \/            \/         \/
 
-      -| Jupyter Kernels at Your Terminal |-
+      -| Jupyter Kernels in Your Terminal |-
 
 --==================================================--
 ```
 ![NBTERMIX SCREEN](https://raw.githubusercontent.com/mtatton/nbtermix/master/nbtermix.png)
 
-Let you view, edit and execute Jupyter Notebooks in the terminal.
+Lets you view, edit and execute Jupyter Notebooks on Your terminal.
 
 ## Install
 
@@ -43,7 +43,7 @@ $ nbtermix --run foo.ipynb
 
 1] execute: nbtermix foo.ipynb
 
-2] There should be notebook ready for You to use
+2] There should be Notebook ready for You to use
 
 3] ctrl+o to open current cell in external editor
 
@@ -56,6 +56,8 @@ $ nbtermix --run foo.ipynb
 7] repeat from step 3 to continue
 
 For more information type ctrl+h
+
+If the cell execution fails then see Troubleshooting section.
 
 Hints:
 
