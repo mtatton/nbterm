@@ -53,7 +53,7 @@ $ nbtermix --run foo.ipynb
 
 6] type key b to insert cell below
 
-7] repeat from step 3 co continue
+7] repeat from step 3 to continue
 
 For more information type ctrl+h
 
