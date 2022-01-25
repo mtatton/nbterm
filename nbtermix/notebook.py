@@ -482,7 +482,7 @@ class Notebook(Help, Format, KeyBindings):
                 outputs.append(
                     {
                         "data": {
-                            data_type: [res_out + "\n", ""],
+                            data_type: [res_out, ""],
                         },
                         "execution_count": execution_count,
                         "metadata": {},
