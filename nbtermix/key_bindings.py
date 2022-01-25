@@ -38,10 +38,6 @@ class KeyBindings:
         async def ce_mode_ed(event):
             self.enter_cell()
             self.edit_in_editor()
-            # This is ugly but it works
-            self.exit_cell()
-            self.enter_cell()
-            self.save()
 
         @self.key_bindings.add("c-w", filter=edit_mode)
         @self.key_bindings.add("c-o", filter=edit_mode)

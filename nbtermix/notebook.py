@@ -67,6 +67,7 @@ class Notebook(Help, Format, KeyBindings):
     marks: List[int]
     debug: bool
     fold: bool
+    ext_edit: int
 
     def __init__(
         self,
@@ -109,6 +110,7 @@ class Notebook(Help, Format, KeyBindings):
         for i in range(256):
             self.marks.append(0)
         self.editor_msg = "|x|"
+        self.ext_edit = 0
 
     def set_language(self):
         self.kernel_name = self.json["metadata"]["kernelspec"]["name"]

@@ -11,7 +11,7 @@ setup(
     version=version_ns["__version__"],
     url="https://github.com/mtatton/nbterm",
     author="Michael Tatton",
-    description="Fork of nbterm. Jupyter Notebooks in Your terminal.",
+    description="Jupyter Notebook in Your Terminal",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     packages=["nbtermix"],

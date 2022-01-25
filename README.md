@@ -39,6 +39,27 @@ Run a notebook in batch mode:
 $ nbtermix --run foo.ipynb
 ```
 
+## Quickstart
+
+1] execute: nbtermix foo.ipynb
+2] There should be notebook ready for You to use
+3] ctrl+o to open current cell in external editor
+4] type Your python expression, function etc. (like 1+1)
+5] press enter to execute current cell
+6] type key b to insert cell below
+7] repeat from step 3 co continue
+
+For more information type ctrl+h
+
+Hints:
+
+* Using j,k will help You to focues to next, previous cells
+* ctrl+f will bring current cell to the top of the screen
+* ctrl+s will save current workbook
+* nbtermix --fold foo.ipynb - will open the notebook and fold cells
+* export EDITOR=vi will use vi for cells editing in external mode
+* e will enter current cell for editing, escpe will return to comand mode
+
 ## Key bindings
 
 There are two modes: edit mode, and command mode.

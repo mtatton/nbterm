@@ -98,6 +98,7 @@ class Cell:
     fold: bool
     vshift: int
     hshift: int
+    ext_edit: bool
 
     def __init__(
         self, notebook, cell_json: Optional[Dict[str, Any]] = None, mode="interactive"
@@ -110,6 +111,7 @@ class Cell:
             self.input_prefix = Window(width=10)
             self.output_prefix = Window(width=10, height=0)
             self.fold = self.notebook.fold
+            self.ext_edit = False
             input_text = "".join(self.json["source"])
             if self.json["cell_type"] == "code":
                 execution_count = self.json["execution_count"] or " "
@@ -141,7 +143,7 @@ class Cell:
                     [ONE_ROW, VSplit([ONE_COL, self.input_window]), ONE_ROW]
                 )
             else:
-                self.input = Frame(self.input_window)
+                self.input = Frame(self.input_window, style="green")
             self.output = Window(content=FormattedTextControl(text=output_text))
             self.output.height = output_height
             self.output_buffer = Buffer()
@@ -176,7 +178,14 @@ class Cell:
         if height_keep is not None and line_nb != height_keep:
             # height has changed
             self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
-        log("-- TEXT: " + self.input_buffer.text)
+        # self.exit_cell()
+        if self.ext_edit is True:
+            log("-- TEXT: " + self.input_buffer.text)
+            self.ext_edit = False
+            self.notebook.edit_mode = False
+            self.update_json()
+            self.set_input_readonly()
+            self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
 
     def set_as_markdown(self):
         prev_cell_type = self.json["cell_type"]
@@ -207,7 +216,7 @@ class Cell:
             self.input_prefix.content = FormattedTextControl(text=ANSI(text))
             self.set_input_readonly()
             if prev_cell_type == "markdown":
-                self.input = Frame(self.input_window)
+                self.input = Frame(self.input_window, style="green")
                 self.notebook.focus(self.notebook.current_cell_idx, update_layout=True)
 
     def set_input_readonly(self, mode="interactive"):
@@ -239,6 +248,7 @@ class Cell:
     def open_in_editor(self):
         self.input_buffer.open_in_editor()
         self.notebook.dirty = True
+        self.ext_edit = True
         log("-- EDIT IN EDITOR END --")
 
     def scroll_output(self):
