@@ -67,6 +67,19 @@ Hints:
 * nbtermix --fold foo.ipynb - will open the notebook and fold cells
 * export EDITOR=vi will use vi for cells editing in external mode
 * e will enter current cell for editing, escpe will return to comand mode
+* in vim use ZZ to save and exit qucker than :wq
+
+## Docker
+
+For docker environment build use:
+
+```./docker.sh```
+
+To build the docker machine and then:
+
+```docker run -it nbtermix:docker```
+
+To run the docker with nbtermix.
 
 ## Key bindings
 
